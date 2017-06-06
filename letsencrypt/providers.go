@@ -16,6 +16,7 @@ import (
 	"github.com/xenolf/lego/providers/dns/ovh"
 	"github.com/xenolf/lego/providers/dns/route53"
 	"github.com/xenolf/lego/providers/dns/vultr"
+	"github.com/xenolf/lego/providers/dns/dnspod"
 )
 
 // ProviderOpts is used to configure the DNS provider
@@ -68,6 +69,9 @@ type ProviderOpts struct {
 
 	// Vultr credentials
 	VultrApiKey string
+	
+	// Dnspod credentials
+	DnspodApiKey string
 }
 
 type Provider string
@@ -85,6 +89,7 @@ const (
 	ROUTE53      = Provider("Route53")
 	VULTR        = Provider("Vultr")
 	HTTP         = Provider("HTTP")
+	DNSPOD	     = Provider("DNSPOD")
 )
 
 type ProviderFactory struct {
@@ -105,6 +110,7 @@ var providerFactory = map[Provider]ProviderFactory{
 	ROUTE53:      ProviderFactory{makeRoute53Provider, lego.DNS01},
 	VULTR:        ProviderFactory{makeVultrProvider, lego.DNS01},
 	HTTP:         ProviderFactory{makeHTTPProvider, lego.HTTP01},
+	DNSPOD:         ProviderFactory{makeDndpodProvider, lego.HTTP01},
 }
 
 func getProvider(opts ProviderOpts) (lego.ChallengeProvider, lego.Challenge, error) {
@@ -319,3 +325,17 @@ func makeNS1Provider(opts ProviderOpts) (lego.ChallengeProvider, error) {
 	}
 	return provider, nil
 }
+
+// returns a preconfigured Dnspod lego.ChallengeProvider
+func makeDnspodProvider(opts ProviderOpts) (lego.ChallengeProvider, error) {
+	if len(opts.DnspodApiKey) == 0 {
+		return nil, fmt.Errorf("Dnspod API key is not set")
+	}
+
+	provider, err := dnspod.NewDNSProviderCredentials(opts.DnspodApiKey)
+	if err != nil {
+		return nil, err
+	}
+	return provider, nil
+}
+
