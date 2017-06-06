@@ -110,7 +110,7 @@ var providerFactory = map[Provider]ProviderFactory{
 	ROUTE53:      ProviderFactory{makeRoute53Provider, lego.DNS01},
 	VULTR:        ProviderFactory{makeVultrProvider, lego.DNS01},
 	HTTP:         ProviderFactory{makeHTTPProvider, lego.HTTP01},
-	DNSPOD:       ProviderFactory{makeDndpodProvider, lego.DNS01},
+	DNSPOD:       ProviderFactory{makeDnspodProvider, lego.DNS01},
 }
 
 func getProvider(opts ProviderOpts) (lego.ChallengeProvider, lego.Challenge, error) {
