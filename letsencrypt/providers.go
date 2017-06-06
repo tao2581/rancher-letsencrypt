@@ -89,7 +89,7 @@ const (
 	ROUTE53      = Provider("Route53")
 	VULTR        = Provider("Vultr")
 	HTTP         = Provider("HTTP")
-	DNSPOD	     = Provider("DNSPOD")
+	DNSPOD	     = Provider("Dnspod")
 )
 
 type ProviderFactory struct {
